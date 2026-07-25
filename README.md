@@ -1,4 +1,4 @@
-# Decode Labs Internship - Project 1
+# COMMAND-LINE AI CHATBOT
 
 ## Overview
 
