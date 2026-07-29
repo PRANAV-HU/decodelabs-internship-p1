@@ -1,0 +1,66 @@
+from google import genai
+
+client = genai.Client(api_key="add your api key")
+
+
+intents = {
+    "greeting": {
+        "patterns": ["hi", "hello", "hey", "good morning", "good evening"],
+        "response": "Hello! How can I help you today?"
+    },
+    "goodbye": {
+        "patterns": ["bye", "goodbye", "see you", "exit", "quit"],
+        "response": "Goodbye! Have a great day!"
+    },
+    "thanks": {
+        "patterns": ["thanks", "thank you", "thx"],
+        "response": "You're welcome! Happy to help."
+    },
+    "about": {
+        "patterns": ["who are you", "what are you", "about yourself"],
+        "response": "I'm an AI chatbot powered by Google's Gemini API."
+    },
+    "help": {
+        "patterns": ["help", "what can you do", "commands"],
+        "response": "I can answer your questions using Gemini. You can also greet me, ask who I am, or simply chat."
+    }
+}
+
+
+def check_intent(user_input):
+    user_input = user_input.lower().strip()
+
+    for intent in intents.values():
+        for pattern in intent["patterns"]:
+            if pattern in user_input:
+                return intent["response"]
+
+    return None
+
+
+def mychat(prompt):
+    try:
+        response = client.models.generate_content(
+            model="gemini-flash-latest",
+            contents=prompt
+        )
+        return response.text
+    except Exception as e:
+        return f"Error: {e}"
+
+
+if __name__ == "__main__":
+
+    while True:
+        user_input = input("You: ").lower().strip()
+
+        if user_input in ["quit", "exit", "bye"]:
+            print("Chatbot: Goodbye!")
+            break
+
+        intent_response = check_intent(user_input)
+
+        if intent_response:
+            print("Chatbot:", intent_response)
+        else:
+            print("Chatbot:", mychat(user_input))
